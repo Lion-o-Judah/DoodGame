@@ -1,0 +1,12 @@
+mod world;
+mod dood;
+
+fn main() {
+    let my_dood = dood::Dood::new();
+    println!("{}", my_dood.sex);
+    match world::Map::random_map() {
+        Ok(world) => {println!("{}", world);},
+        Err(error) => {println!("there was an error generating the world: {}", error)},
+    };
+    
+}

@@ -1,0 +1,32 @@
+use std::fmt;
+
+pub struct Map {
+    width: usize,
+    height: usize,
+    tiles: Vec<Tile>,
+
+}
+
+#[derive(Clone)]
+pub enum TileType {
+    Grass,
+    Wall,
+}
+
+
+
+pub struct Tile{
+    tile_type: TileType,
+    tile_symbol: char
+}
+
+impl Tile{
+    fn get_char(&self) -> char{
+        match self.tile_type{
+            TileType::Grass => {'.'},
+            TileType::Wall => {'0'},
+        }       
+    }
+}
+
+

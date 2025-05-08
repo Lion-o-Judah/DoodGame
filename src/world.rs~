@@ -1,0 +1,104 @@
+use std::fmt;
+
+pub struct Map {
+    width: usize,
+    height: usize,
+    tiles: Vec<Tile>,
+
+}
+
+#[derive(Clone)]
+pub enum TileType {
+    Grass,
+    Wall,
+}
+
+pub enum TileError {
+    OutOfBoundsX, //called if trying to get a tile outside of the tilemap size
+    OutOfBoundsY,
+    TileMapIncomplete,
+    
+}
+
+pub struct Tile{
+    tile_type: TileType,
+    tile_symbol: char
+}
+
+impl Tile{
+    fn get_char(&self) -> char{
+        match self.tile_type{
+            TileType::Grass => {'.'},
+            TileType::Wall => {'0'},
+        }       
+    }
+}
+
+impl Map { 
+
+    fn blank_map(height:usize, width:usize, tile_type:TileType) -> Self {
+        let mut map = Self{
+            width: width,
+            height: height,
+            tiles: Vec::new(),
+        };
+
+        for _ in 0..(width*height){
+            map.tiles.push(Tile{tile_type:tile_type.clone(),tile_symbol:'.'});
+        }
+
+        map
+    }
+    pub fn get_tile(&mut self, x:usize, y:usize) -> Result<&mut Tile, TileError>{
+        if x > self.width {
+            return Err(TileError::OutOfBoundsX);
+        }
+        if y > self.width {
+            return Err(TileError::OutOfBoundsY);
+        }
+
+        let index: usize = (self.width * y) + x;
+
+        if let Some(tile) = self.tiles.get_mut(index){
+            Ok(tile)
+        } else {
+            return Err(TileError::TileMapIncomplete);
+        }
+        
+    }
+
+    pub fn set_tile_type(&mut self, x:usize, y:usize, new_type:TileType) -> Result<(), TileError>{
+        let tile: &mut Tile = self.get_tile(x,y)?;
+        tile.tile_type = new_type;
+        tile.tile_symbol = tile.get_char();
+        Ok(())
+    }
+
+    pub fn random_map() -> Result<Self, TileError>{
+        let mut blank_map = Self::blank_map(30,30,TileType::Grass);
+        blank_map.set_tile_type(2,2,TileType::Wall)?;
+        Ok(blank_map)
+    }
+}
+impl fmt::Display for Map {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "width:{}\nheight:{}\n", self.width, self.height);
+        for y in 0..self.height {
+            for x in 0..self.width{
+                let tile = &self.tiles[y * self.width + x];
+                write!(f, "{}", tile.tile_symbol)?;
+            }
+            writeln!(f)?;
+        }
+        Ok(())
+    }
+}
+impl fmt::Display for TileError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            TileError::OutOfBoundsX => write!(f, "X coordinate is out of bounds"),
+            TileError::OutOfBoundsY => write!(f, "Y coordinate is out of bounds"),
+            TileError::TileMapIncomplete => write!(f, "Tile Map is incomplete"),
+        }
+    }
+}
