@@ -15,7 +15,7 @@ impl Tile{
     pub fn get_char(&self) -> char{
         match self.tile_type{
             TileType::Grass => {'.'},
-            TileType::Wall => {'\u{1f60a}'},
+            TileType::Wall => {'\u{1f333}'},
         }       
     }
 }

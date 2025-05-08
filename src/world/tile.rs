@@ -2,6 +2,7 @@
 pub enum TileType {
     Grass,
     Wall,
+    BerryBush
 }
 
 
@@ -16,6 +17,7 @@ impl Tile{
         match self.tile_type{
             TileType::Grass => {'.'},
             TileType::Wall => {'\u{1f333}'},
+            TileType::BerryBush => {'B'},
         }       
     }
 }
