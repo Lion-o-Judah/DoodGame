@@ -1,0 +1,12 @@
+
+
+
+impl fmt::Display for TileError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            TileError::OutOfBoundsX => write!(f, "X coordinate is out of bounds"),
+            TileError::OutOfBoundsY => write!(f, "Y coordinate is out of bounds"),
+            TileError::TileMapIncomplete => write!(f, "Tile Map is incomplete"),
+        }
+    }
+}
